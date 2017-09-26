@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "xml2xml_glob.py", line 49, in change_xml
+    x2v.WriteScore(score, piece_info, melody, chords)
+  File "/Users/test/Desktop/Tohoku_U/workspace/xml2vec-master/xml2vec.py", line 743, in WriteScore
+    WriteNote(measure, melody[i], tmp_div)
+  File "/Users/test/Desktop/Tohoku_U/workspace/xml2vec-master/xml2vec.py", line 590, in WriteNote
+    n_type.text = note_info.get_note_type(divisions)
+  File "/Users/test/Desktop/Tohoku_U/workspace/xml2vec-master/xml2vec.py", line 133, in get_note_type
+    quit() # 終了
+  File "/Users/test/.pyenv/versions/anaconda2-4.1.1/lib/python2.7/site.py", line 360, in __call__
+    raise SystemExit(code)
+SystemExit: None

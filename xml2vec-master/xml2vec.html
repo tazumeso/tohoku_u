@@ -1,0 +1,209 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module xml2vec</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>xml2vec</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/test/Desktop/Tohoku_U/workspace/xml2vec-master/xml2vec.py">/Users/test/Desktop/Tohoku_U/workspace/xml2vec-master/xml2vec.py</a></font></td></tr></table>
+    <p><tt>Convert&nbsp;MusicXML&nbsp;and&nbsp;Series&nbsp;of&nbsp;Notes&nbsp;and&nbsp;Chords&nbsp;Bidirectionally<br>
+&nbsp;<br>
+MusicXMLから曲情報と主旋律とコード進行を抽出<br>
+曲情報と旋律とコード進行からMusicXMLを生成<br>
+&nbsp;<br>
+---変更予定の現行の仕様（2017/07/11）---<br>
+主旋律を一番上のパートとしている<br>
+&nbsp;&nbsp;&nbsp;&nbsp;--&gt;&nbsp;指定できるように<br>
+テンション・ノートのタイプaddにしか対応していない<br>
+&nbsp;&nbsp;&nbsp;&nbsp;--&gt;&nbsp;alter,&nbsp;subにも対応する<br>
+抽出した結果は<a href="#Note">Note</a>，<a href="#Chord">Chord</a>クラスのリスト，辞書である<br>
+&nbsp;&nbsp;&nbsp;&nbsp;--&gt;&nbsp;Numpy配列などに変換できるようにする</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="xml.etree.ElementTree.html">xml.etree.ElementTree</a><br>
+</td><td width="25%" valign=top><a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="xml2vec.html#Chord">Chord</a>
+</font></dt><dt><font face="helvetica, arial"><a href="xml2vec.html#Note">Note</a>
+</font></dt><dt><font face="helvetica, arial"><a href="xml2vec.html#PieceInfo">PieceInfo</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Chord">class <strong>Chord</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Chord">Chord</a>&nbsp;Description<br>
+&nbsp;<br>
+1個のコードの情報を格納するクラス<br>
+instance&nbsp;variables:<br>
+rt_*&nbsp;--&nbsp;根音のパラメータ<br>
+dr_*&nbsp;--&nbsp;テンションノートのパラメータ<br>
+bs_*&nbsp;--&nbsp;ベース音のパラメータ<br>
+*_step&nbsp;&nbsp;--&nbsp;階名&nbsp;[str]&nbsp;dr_stepのみ[int]<br>
+*_alt&nbsp;&nbsp;&nbsp;--&nbsp;変化記号<br>
+dr_type&nbsp;--&nbsp;テンションの種類&nbsp;(add,&nbsp;alter,&nbsp;subtract)<br>
+ch_kind&nbsp;--&nbsp;コードの種類<br>
+ch_text&nbsp;--&nbsp;種類のテキスト表記<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Chord-__init__"><strong>__init__</strong></a>(self, step, alt, kind, text)</dt><dd><tt>#&nbsp;コンストラクタ<br>
+#&nbsp;step:階名[char],&nbsp;alt:臨時記号[int]<br>
+#&nbsp;kind:和音の種類[string],&nbsp;text:表記[string]</tt></dd></dl>
+
+<dl><dt><a name="Chord-get_symbol"><strong>get_symbol</strong></a>(self)</dt><dd><tt>#&nbsp;コード表記の文字列を返す<br>
+#&nbsp;Return&nbsp;value:&nbsp;コードの文字列表現[string]</tt></dd></dl>
+
+<dl><dt><a name="Chord-set_bass"><strong>set_bass</strong></a>(self, step, alt)</dt><dd><tt>#&nbsp;分数コードのベース音設定<br>
+#&nbsp;step:階名[char],&nbsp;alt:臨時記号[int]</tt></dd></dl>
+
+<dl><dt><a name="Chord-set_degree"><strong>set_degree</strong></a>(self, step, alt, dtype)</dt><dd><tt>#&nbsp;テンション・ノート設定<br>
+#&nbsp;step:度数[int],&nbsp;alt:臨時記号[int]<br>
+#&nbsp;dtype:テンションの種類(add,&nbsp;alter,&nbsp;subtract)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>accidental</strong> = {-2: u'<font color="#c040c0">\u266d\u266d</font>', -1: u'<font color="#c040c0">\u266d</font>', 0: u'', 1: u'<font color="#c040c0">\u266f</font>', 2: u'<font color="#c040c0">\u266f\u266f</font>'}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Note">class <strong>Note</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Musical&nbsp;<a href="#Note">Note</a>&nbsp;Description<br>
+&nbsp;<br>
+1個の音符の情報を格納するクラス<br>
+インスタンス変数:<br>
+step&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;階名[str]<br>
+alter&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;変化記号[int]<br>
+octave&nbsp;&nbsp;&nbsp;:&nbsp;音域[int]<br>
+duration&nbsp;:&nbsp;長さ[int]<br>
+time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;時刻[int]<br>
+time_mod&nbsp;:&nbsp;連符の一つであるかどうか<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Note-__init__"><strong>__init__</strong></a>(self, st, alt, octv, dur, t, mod<font color="#909090">=False</font>)</dt><dd><tt>#&nbsp;コンストラクタ<br>
+#&nbsp;st[str],&nbsp;alt[int],&nbsp;octv[int],&nbsp;t[int],&nbsp;dur[int],&nbsp;mod[bool]</tt></dd></dl>
+
+<dl><dt><a name="Note-get_midi_num"><strong>get_midi_num</strong></a>(self, yamaha<font color="#909090">=False</font>)</dt><dd><tt>#&nbsp;個の音をMIDI規格のnote&nbsp;numberに変換した値を返す<br>
+#&nbsp;yamaha=Trueとするとyamaha式で計算する</tt></dd></dl>
+
+<dl><dt><a name="Note-get_note_type"><strong>get_note_type</strong></a>(self, divisions)</dt><dd><tt>#&nbsp;durationと引数divisionsから音符の見た目の種類を返す<br>
+#&nbsp;64分音符から2倍全音符まで対応<br>
+#&nbsp;連符は2拍3連と1拍3連のみ対応&nbsp;それ以外はエラーを返す</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>step2num</strong> = {'A': 9, 'B': 11, 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PieceInfo">class <strong>PieceInfo</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Piece&nbsp;Information<br>
+&nbsp;<br>
+Key,&nbsp;Tempo,&nbsp;Time,&nbsp;total&nbsp;number&nbsp;of&nbsp;measures,&nbsp;divisions<br>
+&nbsp;<br>
+instance&nbsp;variables:<br>
+measure_num&nbsp;--&nbsp;合計小節数[int]<br>
+tempo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;曲のテンポ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{小節番号:[bpm[int],&nbsp;beat-unit[str],&nbsp;bpm(再生用)[int]],&nbsp;...}<br>
+key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;曲の調&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Part-ID:{小節番号:値[int],&nbsp;...},&nbsp;...}<br>
+time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;曲の拍子<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{小節番号:[拍子の分子,&nbsp;拍子の分母],&nbsp;...}<br>
+divisions&nbsp;&nbsp;&nbsp;--&nbsp;この値を4分音符の長さとする<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Part-ID:値[int],&nbsp;...}<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PieceInfo-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>#&nbsp;コンストラクタ</tt></dd></dl>
+
+<dl><dt><a name="PieceInfo-set_divisions"><strong>set_divisions</strong></a>(self, part, value)</dt><dd><tt>#&nbsp;divisionsの設定<br>
+#&nbsp;part[int],&nbsp;value[int]</tt></dd></dl>
+
+<dl><dt><a name="PieceInfo-set_key"><strong>set_key</strong></a>(self, part, measure, fifth)</dt><dd><tt>#&nbsp;調の設定<br>
+#&nbsp;part:パートid[int],&nbsp;measure:小節番号[int],&nbsp;fifth:調を表す値[int]<br>
+#&nbsp;fifthに関してはREADME参照</tt></dd></dl>
+
+<dl><dt><a name="PieceInfo-set_tempo"><strong>set_tempo</strong></a>(self, measure, bpm, b_unit, s_tempo)</dt><dd><tt>#&nbsp;テンポの設定<br>
+#&nbsp;measure[int],&nbsp;value[int]</tt></dd></dl>
+
+<dl><dt><a name="PieceInfo-set_time"><strong>set_time</strong></a>(self, measure, beats, beat_type)</dt><dd><tt>#&nbsp;拍子の設定<br>
+#&nbsp;measure[int],&nbsp;beats[int],&nbsp;beat_type[int]</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>BEATS</strong> = 4</dl>
+
+<dl><dt><strong>BEAT_TYPE</strong> = 4</dl>
+
+<dl><dt><strong>BPM</strong> = 120</dl>
+
+<dl><dt><strong>B_UNIT</strong> = 'quarter'</dl>
+
+<dl><dt><strong>DIVISIONS</strong> = 4</dl>
+
+<dl><dt><strong>FIFTHS</strong> = 0</dl>
+
+<dl><dt><strong>PART_NUM</strong> = 1</dl>
+
+<dl><dt><strong>S_TEMPO</strong> = 120</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-WriteChord"><strong>WriteChord</strong></a>(measure, chord)</dt><dd><tt>#&nbsp;小節にコードを書き込む<br>
+#&nbsp;measure[xml.etree.ElementTree.SubElement],&nbsp;chord[<a href="#Chord">Chord</a>]</tt></dd></dl>
+ <dl><dt><a name="-WriteDefaults"><strong>WriteDefaults</strong></a>(score)</dt><dd><tt>#&nbsp;楽譜のデフォルト設定<br>
+#&nbsp;全てMuseScoreの設定に従う<br>
+#&nbsp;score:ElementTreeのElement</tt></dd></dl>
+ <dl><dt><a name="-WriteHeader"><strong>WriteHeader</strong></a>()</dt><dd><tt>Make&nbsp;MusicXML&nbsp;Header</tt></dd></dl>
+ <dl><dt><a name="-WriteIdentification"><strong>WriteIdentification</strong></a>(score)</dt><dd><tt>#&nbsp;既定の設定をtreeに書き込むだけ<br>
+#&nbsp;score:ElementTreeのElement<br>
+#&nbsp;あとで元の曲と同じ設定にするように改良予定</tt></dd></dl>
+ <dl><dt><a name="-WriteNote"><strong>WriteNote</strong></a>(measure, note_info, divisions)</dt><dd><tt>#&nbsp;小節に音符を書き込む<br>
+#&nbsp;measure[xml.etree.ElementTree.SubElement],&nbsp;note_info[<a href="#Note">Note</a>],&nbsp;divisions[int]</tt></dd></dl>
+ <dl><dt><a name="-WritePartList"><strong>WritePartList</strong></a>(score)</dt><dd><tt>#&nbsp;part&nbsp;list&nbsp;を作る<br>
+#&nbsp;現在は楽器をピアノとして既定の内容を出力するだけ<br>
+#&nbsp;score:ElementTreeのElement</tt></dd></dl>
+ <dl><dt><a name="-WriteScore"><strong>WriteScore</strong></a>(score, piece_info, melody, chords)</dt><dd><tt>楽譜情報をElementTreeに書き込む<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+score&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;XMLを構成するTreeの頂点&nbsp;[xml.etree.ElementTree.Element]<br>
+piece_info&nbsp;--&nbsp;曲情報&nbsp;[<a href="#PieceInfo">PieceInfo</a>]<br>
+melody&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;旋律&nbsp;[list]<br>
+chords&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;コード進行&nbsp;[dictionary&nbsp;of&nbsp;<a href="#Chord">Chord</a>]</tt></dd></dl>
+ <dl><dt><a name="-extract_music"><strong>extract_music</strong></a>(soup)</dt><dd><tt>Extract&nbsp;Melody&nbsp;and&nbsp;Chords&nbsp;data&nbsp;from&nbsp;MusicXML&nbsp;file<br>
+&nbsp;<br>
+MusicXMLを読み込んだsoupを入力し，そこから曲情報とメロディとコードを抽出してきます<br>
+重音の場合は一番上のみ抽出します<br>
+return&nbsp;(曲情報[<a href="#PieceInfo">PieceInfo</a>,&nbsp;メロディ[<a href="#Note">Note</a>のリスト],&nbsp;コード{時刻:<a href="#Chord">Chord</a>なる辞書}])</tt></dd></dl>
+</td></tr></table>
+</body></html>
